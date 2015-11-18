@@ -1,0 +1,9 @@
+﻿{
+    // input folder for Oanda files
+    "input-folder": "/Oanda/",
+
+    // output folder for Lean files
+    "data-folder": "../../../Lean/Data/"
+
+
+}
