@@ -7,6 +7,7 @@ using ICSharpCode.SharpZipLib.GZip;
 using ICSharpCode.SharpZipLib.Zip;
 using QuantConnect;
 using QuantConnect.Configuration;
+using QuantConnect.Util;
 
 namespace OandaToLeanConverter
 {
@@ -30,6 +31,9 @@ namespace OandaToLeanConverter
             foreach (var fileName in Directory.GetFiles(inputFolder, "oanda_forex_*.txt.gz"))
             {
                 var name = Path.GetFileName(fileName) ?? string.Empty;
+
+                //if (string.CompareOrdinal(name.ToLower(), "oanda_forex_usd_zar_2014.txt.gz") < 0)
+                //    continue;
 
                 Console.WriteLine("Processing file: {0}", name);
 
@@ -89,7 +93,7 @@ namespace OandaToLeanConverter
                                 outputStream.Dispose();
                             }
 
-                            var outputFile = Path.Combine(outputFolder, Compression.CreateZipFileName(symbol, securityType, time, Resolution.Tick));
+                            var outputFile = Path.Combine(outputFolder, LeanData.GenerateZipFileName(symbol, securityType, time, Resolution.Tick));
                             Console.WriteLine(outputFile);
 
                             if (!Directory.Exists(outputFolder)) Directory.CreateDirectory(outputFolder);
@@ -97,7 +101,7 @@ namespace OandaToLeanConverter
                             outputStream = new ZipOutputStream(File.Create(outputFile));
                             writer = new StreamWriter(outputStream);
 
-                            var zipEntry = Compression.CreateZipEntryName(symbol, securityType, date, Resolution.Tick, TickType.Quote);
+                            var zipEntry = LeanData.GenerateZipEntryName(symbol, securityType, date, Resolution.Tick, TickType.Quote);
                             outputStream.PutNextEntry(new ZipEntry(zipEntry));
 
                             lastDate = date;
